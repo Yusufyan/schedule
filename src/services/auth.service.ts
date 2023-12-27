@@ -1,8 +1,10 @@
-import { LoginDTO, RegisterDTO } from "src/dtos/user.dto";
-import { Users } from "src/models/mst-user.model";
-import { getManager } from "typeorm";
 import bcrypt from "bcrypt";
-import ApiError from "src/configs/api-error.config";
+import jwt from 'jsonwebtoken';
+import { LoginDTO, RegisterDTO } from "../dtos/user.dto";
+import { Users } from "../models/mst-user.model";
+import { getManager } from "typeorm";
+import ApiError from "../configs/api-error.config";
+import { env } from "process";
 
 export async function registerService(dto: RegisterDTO): Promise<any> {
   const entityManager = getManager();
@@ -24,5 +26,25 @@ export async function registerService(dto: RegisterDTO): Promise<any> {
 }
 
 export async function loginService(dto: LoginDTO): Promise<any> {
-  
+  const entityManager = getManager();
+  const dataUser = await entityManager.findOne(Users, {
+    where: [
+      { username: dto.emailOrUsername },
+      { email: dto.emailOrUsername }
+    ]
+  })
+
+  if (!dataUser) throw new ApiError(401, "Bad Credential");
+
+  const validate = await bcrypt.compare(dto.password, dataUser.password);
+
+  if (!validate) throw new ApiError(401, "Bad Credential");
+
+  const token = jwt.sign(
+    { userId: dataUser.id },
+    env.SECRET_KEY,
+    { expiresIn: "1d" }
+  );
+
+  return { token }
 }

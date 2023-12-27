@@ -6,16 +6,12 @@ export class Doctor implements IDoctors {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
-  doctors: string;
+  @Column({ length: 50 })
+  doctor_name?: string;
 
-  @Column()
-  day?: string;
-  time_start?: Date;
-  time_finish?: Date;
-  quota?: number;
-  status?: boolean;
-  date?: Date;
+  @Column({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   created_at?: Date;
+
+  @Column({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   updated_at?: Date;
 }

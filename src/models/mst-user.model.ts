@@ -9,7 +9,7 @@ export class Users implements IUsers {
   @Column({ length: 20, nullable: false })
   username?: string;
 
-  @Column({ length: 20, nullable: false })
+  @Column({ length: 50, nullable: false })
   email?: string;
 
   @Column({ nullable: false })

@@ -1,10 +1,9 @@
 
 export interface ISchedules {
   id?: number
-  doctor?: string
   day?: string
-  time_start?: Date
-  time_end?: Date
+  time_start?: string
+  time_end?: string
   quota?: number
-  status?: string
+  status?: boolean
 }
